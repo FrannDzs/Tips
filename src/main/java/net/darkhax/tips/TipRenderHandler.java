@@ -29,11 +29,17 @@ public class TipRenderHandler {
         if (screen instanceof DirtMessageScreen || screen instanceof ConnectingScreen || screen instanceof DisconnectedScreen || screen instanceof WorldLoadProgressScreen || screen instanceof WorkingScreen || screen instanceof IngameMenuScreen) {
             
             final long currentTime = System.currentTimeMillis();
+            final int currentCycleTime = tip != null ? tip.getCycleTime() : Tips.CFG.getCycleTime();
             
-            if (currentTime - initTime > Tips.CFG.getCycleTime()) {
+            if (currentTime - initTime > currentCycleTime) {
                 
                 tip = Tips.API.getRandomTip();
                 initTime = currentTime;
+                
+                if (tip != null) {
+                    
+                    Tips.LOG.debug("Displaying tip {} on screen {}.", tip.getId(), screen.getClass().getSimpleName());
+                }
             }
             
             if (tip != null) {
